@@ -7,21 +7,31 @@ class CampsiteComments extends Component{
     }
     render(){
         let comments = this.props.campsite.comments;
-        return(
-            <div id='txtComments' className='col-md-5 m1'>
-                <h4>Comments</h4>
-                {comments.map(comment=> {
-                    return (
-                    <div>
-                        <p>{comment.text}<br/>
-                        -- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}
-                        </p>
-                    </div>
-                    );  
-                })
-                }
-            </div>
-        );
+        console.log(`${this.props.campsite.name} : ${this.props.showComment}`);
+        
+        if (this.props.showComment){
+            return(
+                <div id='txtComments' className='col-md-5 m1'>
+                    <h4>Comments</h4>
+                    {comments.map(comment=> {
+                        return (
+                        <div>
+                            <p>{comment.text}<br/>
+                            -- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}
+                            </p>
+                        </div>
+                        );  
+                    })
+                    }
+                </div>
+                
+            );
+        }else {
+            return(
+                <div></div>
+            );
+        }
+
     }
 }
 

@@ -8,6 +8,7 @@ class Directory extends Component{
         this.state = {
             selectedCampsite: null
         };
+        
     }
 
     onCampsiteSelect(campsite){
@@ -15,6 +16,7 @@ class Directory extends Component{
     }
 
     render() {
+        console.log("rendering Directory")
         const directory = this.props.campsites.map(campsite => {
             return (
                 <div key={campsite.id} className='col-md-5 m-1'>
@@ -28,6 +30,7 @@ class Directory extends Component{
                 </div>
             );
         });
+        console.log("rendering Directory and selected campsite")
         return (
             <div className="container">
                 <div className="row">

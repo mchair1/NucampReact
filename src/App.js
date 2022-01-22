@@ -10,7 +10,22 @@ class App extends Component {
         this.state = {
             campsites: CAMPSITES
         };
+        
+        //Not using this toggleComments anymore
+        //this.toggleCommentVis.bind(this);
+
     }
+
+    //Went with holding the Show Comments in the Campsite Info class
+    // toggleCommentVis(campsite) {
+    //     console.log("inToggleComments ID: "+ campsite.name);
+    //     let myCampsites = this.state.campsites;
+    //     console.log(myCampsites[campsite.id].showComment);
+    //     // console.alert(myCampsites[campsite.id].showComment);
+    //     this.setState({campsites: myCampsites})
+    //     //this.setState(sitethis.state.campsites[campsite.id].showComment,!this.state.campsites[campsite.id].showComment);
+    //     //this.setState({campsites[campsite.id].showComment, !campsite.campsites[campsite.id].showComment});
+    // };
     render() {
         return (
             <div className="App">
