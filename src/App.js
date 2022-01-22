@@ -11,21 +11,23 @@ class App extends Component {
             campsites: CAMPSITES
         };
         
-        //Not using this toggleComments anymore
-        //this.toggleCommentVis.bind(this);
+        //Hooray Google
+        this.toggleCommentVis= this.toggleCommentVis.bind(this);
 
     }
 
-    //Went with holding the Show Comments in the Campsite Info class
-    // toggleCommentVis(campsite) {
-    //     console.log("inToggleComments ID: "+ campsite.name);
-    //     let myCampsites = this.state.campsites;
-    //     console.log(myCampsites[campsite.id].showComment);
-    //     // console.alert(myCampsites[campsite.id].showComment);
-    //     this.setState({campsites: myCampsites})
-    //     //this.setState(sitethis.state.campsites[campsite.id].showComment,!this.state.campsites[campsite.id].showComment);
-    //     //this.setState({campsites[campsite.id].showComment, !campsite.campsites[campsite.id].showComment});
-    // };
+    //toggle show comments for a specific campsite, probably a better way but this works
+    toggleCommentVis(campsiteList) {
+        console.log("Updateing Campsite list...")
+        this.setState({campsites: campsiteList});
+    };
+
+    //this was just a simple test method for passing methods down
+    passTest(){
+        console.log("In Pass Test");
+    };
+    
+    //Render the Navbar Component and a directory Component
     render() {
         return (
             <div className="App">
@@ -34,7 +36,7 @@ class App extends Component {
                         <NavbarBrand href="/">NuCamp</NavbarBrand>
                     </div>
                 </Navbar>
-                <Directory campsites = {this.state.campsites}/>
+                <Directory campsites = {this.state.campsites} toggleVis = {this.toggleCommentVis}/>
             </div>
         );
     }
