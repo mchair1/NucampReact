@@ -11,8 +11,10 @@ class CampsiteInfo extends Component{
             showComment: false
         };
     }
+
     //Look into getting comment button to toggle.
     renderCampsite(campsite){
+        
         let buttonText = "";
         // setting the text to show in the button, based on the allSites showComment prop
         if (this.props.allSites[campsite.id].showComment){
@@ -56,9 +58,7 @@ class CampsiteInfo extends Component{
         console.log("Rendering Comments Section...")
         //If we have comments then
         if (comments){
-            //Honestly don't remember why I did this, but if I don't have it, thows "comments.map is not a function" error
-            let comments = this.props.campsite.comments;
-          
+                      
             //This if was for the toggling comments on every campsite, didn't like that as much
             //if (this.state.showComment){
 
@@ -91,20 +91,14 @@ class CampsiteInfo extends Component{
     render(){
         console.log("Rendering Selected Campsite Info...");
         if (this.props.campsite){
-                //Not using CamsiteCommentsCompenent for turning in project
-                // return(
-                //     <div className='row'>
-                //         {this.renderCampsite(this.props.campsite)}
-                //         <CampsiteComments campsite = {this.props.campsite} showComment={this.state.showComment}/>
-                //     </div>
-                // );
-                //create the Campsite Info Row using the renderCampsite and renderComments functions
-                return(
+            return(
+                <div className='container'>
                     <div className='row'>
                         {this.renderCampsite(this.props.campsite)}
-                        {this.renderComments(this.props.campsite)}
+                        {this.renderComments(this.props.campsite.comments)}
                     </div>
-                );    
+                </div>
+            );    
         }
         return <div/>;
     }
