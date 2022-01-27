@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import {Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Button} from 'reactstrap';
+import { Card, CardImg, CardText, CardBody, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import CampsiteComments from './CampsiteCommentsComponent';
 
 
@@ -11,7 +12,6 @@ import CampsiteComments from './CampsiteCommentsComponent';
                 <Card>
                     <CardImg top src={campsite.image} alt={campsite.name}/>
                     <CardBody>
-                        <CardTitle>{campsite.name}</CardTitle>
                         <CardText>{campsite.description}</CardText>
                     </CardBody>
                 </Card>
@@ -52,17 +52,26 @@ import CampsiteComments from './CampsiteCommentsComponent';
 
         console.log("Rendering Selected Campsite Info...");
         if (props.campsite){
-            console.log(props.allSites[0].name)
             return(
                 <div className='container'>
+                    <div className="row">
+                        <div className="col">
+                            <Breadcrumb>
+                                <BreadcrumbItem><Link to="/directory">Directory</Link></BreadcrumbItem>
+                                <BreadcrumbItem active>{props.campsite.name}</BreadcrumbItem>
+                            </Breadcrumb>
+                            <h2>{props.campsite.name}</h2>
+                            <hr />
+                        </div>
+                    </div>
                     <div className='row'>
-                        <RenderCampsite campsite={props.campsite} allSites={props.allSites}/>
-                        <RenderComments comments = {props.campsite.comments} allSites={props.allSites} />
+                        <RenderCampsite campsite={props.campsite}/>
+                        <RenderComments comments={props.comments}/>
                     </div>
                 </div>
             );    
         }
-        return <div/>;
+        return <div></div>;
 
             //This fuction toggles wheter to show the comment for a specific site, and hold that value for that specific site, not all
 
