@@ -18,7 +18,7 @@ function About(props) {
             return(
             <React.Fragment>
                 <Media object src={partner.image} alt={partner.name} width='150'/>
-                <Media body classname='ml-4 mb-4'>
+                <Media body classname='ml-5 mb-4'>
                     <Media heading>
                         {partner.name}
                     </Media>
