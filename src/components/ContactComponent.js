@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Label, Input, Col } from 'reactstrap';
+import { Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Label, Input, Col, FormFeedback } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 class Contact extends Component {
@@ -13,11 +13,63 @@ class Contact extends Component {
             email:  '',
             agree: false,
             contactType: 'ByPhone',
-            feedback: ''
+            feedback: '',
+            touched: {
+                firstName: false,
+                lastName: false,
+                phoneNum: false,
+                email:  false
+            }
         }
 
         this.handleInputChange= this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.checkNameLength = this.checkNameLength.bind(this);
+        
+    }
+    validate(firstName, lastName, phoneNum, email){
+        const errors = {
+            firstName: '',
+            lastName: '',
+            phoneNum: '',
+            email: ''
+        }
+        
+        if (this.state.touched.firstName){
+            errors.firstName = this.checkNameLength(this.state.firstName);
+        }
+        if (this.state.touched.lastName){
+            errors.lastName = this.checkNameLength(this.state.lastName);
+        }
+
+        const reg = /^\d+$/;
+        if (this.state.touched.phoneNum && !reg.test(phoneNum)){
+            errors.phoneNum = 'The phone number should contain only numbers.'
+        }
+        if (this.state.touched.email && !email.includes('@')){
+            errors.email = 'The email must contain an @.'
+        }
+
+        return errors;
+
+    }
+    //since we're using the same min and max char, just setting up a function, plus just one spot to change if needed.
+    checkNameLength(nameToCheck){
+        let minChar = 2;
+        let maxChar = 15;
+        if (this.state.touched.firstName && (nameToCheck.length<minChar || nameToCheck.length> maxChar)){
+            return `Name must be between ${minChar} and ${maxChar} characters.  You are at ${nameToCheck.length} characters.`;
+        }else{
+            return '';
+        }
+    }
+    
+    handleBlur = (field)=> () =>{
+        this.setState(
+            {
+                touched: {...this.state.touched, [field]: true}
+            }
+        );
     }
 
     handleInputChange(event){
@@ -35,6 +87,9 @@ class Contact extends Component {
         event.preventDefault();
     }
     render() {
+
+        const errors = this.validate(this.state.firstName,this.state.lastName,this.state.phoneNum,this.state.email);
+
         return(
             <div className="container">
                 <div className="row">
@@ -76,7 +131,11 @@ class Contact extends Component {
                                     <Input type="text" id="firstName" name="firstName"
                                         placeholder="First Name"
                                         value={this.state.firstName}
-                                        onChange={this.handleInputChange} />
+                                        onBlur={this.handleBlur('firstName')}
+                                        onChange={this.handleInputChange} 
+                                        invalid = {errors.firstName}    
+                                        />
+                                        <FormFeedback>{errors.firstName}</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -85,7 +144,11 @@ class Contact extends Component {
                                     <Input type="text" id="lastName" name="lastName"
                                         placeholder="Last Name"
                                         value={this.state.lastName}
-                                        onChange={this.handleInputChange} />
+                                        onBlur={this.handleBlur('lastName')}
+                                        onChange={this.handleInputChange}
+                                        invalid = {errors.lastName}    
+                                        />
+                                        <FormFeedback>{errors.lastName}</FormFeedback>
                                 </Col>                        
                             </FormGroup>
                             <FormGroup row>
@@ -94,7 +157,11 @@ class Contact extends Component {
                                     <Input type="tel" id="phoneNum" name="phoneNum"
                                         placeholder="Phone number"
                                         value={this.state.phoneNum}
-                                        onChange={this.handleInputChange} />
+                                        onBlur={this.handleBlur('phoneNum')}
+                                        onChange={this.handleInputChange} 
+                                        invalid = {errors.phoneNum}    
+                                        />
+                                        <FormFeedback>{errors.phoneNum}</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -103,7 +170,11 @@ class Contact extends Component {
                                     <Input type="email" id="email" name="email"
                                         placeholder="Email"
                                         value={this.state.email}
-                                        onChange={this.handleInputChange} />
+                                        onBlur={this.handleBlur('email')}
+                                        onChange={this.handleInputChange} 
+                                        invalid = {errors.email}    
+                                        />
+                                        <FormFeedback>{errors.email}</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
