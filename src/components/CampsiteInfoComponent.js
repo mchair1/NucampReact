@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Card, CardImg, CardText, CardBody, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { Card, CardImg, CardText, CardBody, Breadcrumb, BreadcrumbItem, Button,Modal, ModalHeader, ModalBody, Label,Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { Control, LocalForm, Errors} from 'react-redux-form';
 import CampsiteComments from './CampsiteCommentsComponent';
 
 
@@ -30,7 +31,7 @@ import CampsiteComments from './CampsiteCommentsComponent';
             //If we want to show the comments for this particular campsite create the comments div
             
                 return(
-                    <div id='txtComments' className='col-md-5 m1'>
+                    <div id='txtComments' className='col-md-5 m-1'>
                         <h4>Comments</h4>
                         {comments.map(comment=> {
                             return (
@@ -42,6 +43,7 @@ import CampsiteComments from './CampsiteCommentsComponent';
                             );  
                         })
                         }
+                        <CommentForm />
                     </div>
                     
                 );
@@ -75,6 +77,75 @@ import CampsiteComments from './CampsiteCommentsComponent';
 
             //This fuction toggles wheter to show the comment for a specific site, and hold that value for that specific site, not all
 
+    }
+    const maxLength = len=> val => !val || (val.length<= len);
+    const minLength = len => val => val && (val.length >= len);
+    const required = val => val&& val.length;
+
+    class CommentForm extends Component{
+        constructor(props){
+            super(props)
+
+            this.handleSubmit = this.handleSubmit.bind(this);
+
+        }
+        handleSubmit(values){
+            let submitMessage = `Current State is: ${JSON.stringify(values)}`
+            console.log(submitMessage);
+            alert(submitMessage);
+        }
+        render(){
+            return(
+            <div>
+                <Button outline><i className='fa fa-lg fa-pencil'/> Submit Comment</Button>
+                <Modal isOpen='true'>
+                    <ModalHeader>
+                        Submit Comment
+                    </ModalHeader>
+                    <ModalBody>
+                        <LocalForm onSubmit={values => this.handleSubmit(values)}>
+                            <div className='form-group'>
+                                <Label htmlFor='rating'>Rating</Label>
+                                <Control.select className = 'form-control' name='rating' id='rating' model='.rating'>
+                                    <option value='1'>1</option>
+                                    <option value='2'>2</option>
+                                    <option value='3'>3</option>
+                                    <option value='4'>4</option>
+                                    <option value='5'>5</option>
+                                </Control.select>
+                            </div>
+                            <div className='form-group'>
+                                <Label htmlFor='author'>Your Name</Label>
+                                <Control.text className='form-control' name='author' id='author' model='.author'
+                                    validators={{
+                                        minLength: minLength(2),
+                                        maxLength: maxLength(15)
+                                    }}
+                                />
+                                <Errors
+                                    className='text-danger'
+                                    model='.author'
+                                    show='touched'
+                                    component='div'
+                                    messages={{
+                                        required: 'Required',
+                                        minLength: 'Must be at least 2 characters',
+                                        maxLength: 'Must be 15 characters or less'
+                                    }}
+                                />
+                            </div>
+                            <div className='form-group'>
+                                <Label htmlFor='text'>Comment</Label>
+                                <Control.textarea className='form-control' name='text' id='text' model='.text' rows='6'></Control.textarea>
+                            </div>
+                            <Button type='submit' color='primary' >Submit</Button>
+                        </LocalForm>
+                    </ModalBody>
+                </Modal>
+            </div>
+            );
+
+        }
     }
 
 
