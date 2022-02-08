@@ -20,7 +20,7 @@ import CampsiteComments from './CampsiteCommentsComponent';
         );
     }
     
-    function RenderComments({comments}){
+    function RenderComments({comments, addComment, campsiteId}){
         console.log("Rendering Comments Section...")
         //If we have comments then
         if (comments){
@@ -43,16 +43,15 @@ import CampsiteComments from './CampsiteCommentsComponent';
                             );  
                         })
                         }
-                        <CommentForm />
+                        <CommentForm campsiteId={campsiteId} addComment={addComment} />
                     </div>
                     
                 );
         }
     }
     function CampsiteInfo(props){
-        
-
         console.log("Rendering Selected Campsite Info...");
+        console.log(props.campsite.id);
         if (props.campsite){
             return(
                 <div className='container'>
@@ -68,7 +67,7 @@ import CampsiteComments from './CampsiteCommentsComponent';
                     </div>
                     <div className='row'>
                         <RenderCampsite campsite={props.campsite}/>
-                        <RenderComments comments={props.comments}/>
+                        <RenderComments comments={props.comments} addComment={props.addComment} campsiteId={props.campsite.id}/>
                     </div>
                 </div>
             );    
@@ -85,21 +84,32 @@ import CampsiteComments from './CampsiteCommentsComponent';
     class CommentForm extends Component{
         constructor(props){
             super(props)
+            //might not need this
+            this.state = {
+                isCommentOpen: false
+            }
 
             this.handleSubmit = this.handleSubmit.bind(this);
-
+            //might not need this
+            this.toggleComment = this.toggleComment.bind(this);
+        }
+        //Might not need this
+        toggleComment(){
+            this.setState({
+                isCommentOpen: !this.state.isCommentOpen
+            });
         }
         handleSubmit(values){
-            let submitMessage = `Current State is: ${JSON.stringify(values)}`
-            console.log(submitMessage);
-            alert(submitMessage);
+            this.toggleComment();
+            this.props.addComment(this.props.campsiteId, values.rating, values.author, values.text);
+            console.log(this.props.campsite.id, values.rating, values.author, values.text);
         }
         render(){
             return(
             <div>
-                <Button outline><i className='fa fa-lg fa-pencil'/> Submit Comment</Button>
-                <Modal isOpen='true'>
-                    <ModalHeader>
+                <Button outline onClick={this.toggleComment}><i className='fa fa-lg fa-pencil'/> Submit Comment</Button>
+                <Modal isOpen={this.state.isCommentOpen} toggle={this.toggleComment}>
+                    <ModalHeader toggle={this.toggleComment}>
                         Submit Comment
                     </ModalHeader>
                     <ModalBody>
