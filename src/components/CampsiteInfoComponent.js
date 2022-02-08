@@ -3,6 +3,7 @@ import { Card, CardImg, CardText, CardBody, Breadcrumb, BreadcrumbItem, Button,M
 import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors} from 'react-redux-form';
 import CampsiteComments from './CampsiteCommentsComponent';
+import {Loading} from './LoadingComponent';
 
 
     //Look into getting comment button to toggle.
@@ -51,7 +52,26 @@ import CampsiteComments from './CampsiteCommentsComponent';
     }
     function CampsiteInfo(props){
         console.log("Rendering Selected Campsite Info...");
-        console.log(props.campsite.id);
+        if (props.isLoading){
+            console.log("isLoading...");
+            return (
+                <div className='container'>
+                    <div className='row'>
+                        <Loading/>
+                    </div>
+                </div>
+            );
+        }else if(props.errMess){
+            return(
+            <div className='container'>
+                <div className='row'>
+                    <div className='col'>
+                        <h4>{props.errMess}</h4>
+                    </div>
+                </div>
+            </div>
+            );
+        }
         if (props.campsite){
             return(
                 <div className='container'>
