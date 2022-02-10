@@ -6,6 +6,7 @@ import CampsiteComments from './CampsiteCommentsComponent';
 import {Loading} from './LoadingComponent';
 import {baseUrl} from '../shared/baseUrl';
 import {FadeTransform, Fade, Stagger} from 'react-animation-components';
+import {useSpring, animated} from 'react-spring';
 
 
     //Look into getting comment button to toggle.
@@ -27,6 +28,7 @@ import {FadeTransform, Fade, Stagger} from 'react-animation-components';
     
     function RenderComments({comments, postComment, campsiteId}){
         console.log("Rendering Comments Section...")
+
         //If we have comments then
         if (comments){
                       
@@ -34,9 +36,9 @@ import {FadeTransform, Fade, Stagger} from 'react-animation-components';
             //if (this.state.showComment){
 
             //If we want to show the comments for this particular campsite create the comments div
-            
                 return(
                     <div id='txtComments' className='col-md-5 m-1'>
+
                         <h4>Comments</h4>
                         <Stagger in>
                             {comments.map(comment=> {
@@ -60,6 +62,11 @@ import {FadeTransform, Fade, Stagger} from 'react-animation-components';
     }
     function CampsiteInfo(props){
         console.log("Rendering Selected Campsite Info...");
+        const styles = useSpring({
+            loop: { reverse: true },
+            from: { x: 0 },
+            to: { x: 100 },
+          })
         if (props.isLoading){
             console.log("isLoading...");
             return (
@@ -81,22 +88,23 @@ import {FadeTransform, Fade, Stagger} from 'react-animation-components';
             );
         }
         if (props.campsite){
+
             return(
                 <div className='container'>
                     <div className="row">
-                        <div className="col">
+                        <animated.div style={{...styles,}} className="col">
                             <Breadcrumb>
                                 <BreadcrumbItem><Link to="/directory">Directory</Link></BreadcrumbItem>
                                 <BreadcrumbItem active>{props.campsite.name}</BreadcrumbItem>
                             </Breadcrumb>
-                            <h2>{props.campsite.name}</h2>
+                            <animated.h2 style={{...styles,}}>{props.campsite.name}</animated.h2>
                             <hr />
-                        </div>
+                        </animated.div>
                     </div>
-                    <div className='row'>
+                    <animated.div style={{...styles,}} className='row'>
                         <RenderCampsite campsite={props.campsite}/>
                         <RenderComments comments={props.comments} postComment={props.postComment} campsiteId={props.campsite.id}/>
-                    </div>
+                    </animated.div>
                 </div>
             );    
         }
