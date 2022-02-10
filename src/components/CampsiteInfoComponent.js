@@ -92,19 +92,19 @@ import {useSpring, animated} from 'react-spring';
             return(
                 <div className='container'>
                     <div className="row">
-                        <animated.div style={{...styles,}} className="col">
+                        <div className="col">
                             <Breadcrumb>
                                 <BreadcrumbItem><Link to="/directory">Directory</Link></BreadcrumbItem>
                                 <BreadcrumbItem active>{props.campsite.name}</BreadcrumbItem>
                             </Breadcrumb>
-                            <animated.h2 style={{...styles,}}>{props.campsite.name}</animated.h2>
+                            <h2>{props.campsite.name}</h2>
                             <hr />
-                        </animated.div>
+                        </div>
                     </div>
-                    <animated.div style={{...styles,}} className='row'>
+                    <div className='row'>
                         <RenderCampsite campsite={props.campsite}/>
                         <RenderComments comments={props.comments} postComment={props.postComment} campsiteId={props.campsite.id}/>
-                    </animated.div>
+                    </div>
                 </div>
             );    
         }
