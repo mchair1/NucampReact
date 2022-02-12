@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import {Card, CardImg, CardImgOverlay, CardTitle, Breadcrumb, BreadcrumbItem} from 'reactstrap';
 import { Link } from 'react-router-dom'
+import { Loading } from './LoadingComponent';
+import {baseUrl} from '../shared/baseUrl';
 
 function RenderDirectoryItem({campsite}){
     return(
         <Card >
             <Link to={`/directory/${campsite.id}`}>
-                <CardImg width="100%" src={campsite.image} alt={campsite.name}/>
+                <CardImg width="100%" src={baseUrl + campsite.image} alt={campsite.name}/>
                 <CardImgOverlay>
                     <CardTitle>{campsite.name}</CardTitle>
                 </CardImgOverlay>
@@ -21,7 +23,7 @@ function Directory(props){
     
         console.log("Rendering Campsite List Cards...")
         // running through the campsites with map and creating the directory object
-        const directory = props.campsites.map(campsite => {
+        const directory = props.campsites.campsites.map(campsite => {
             return (
                 <div key={campsite.id} className='col-md-5 m-1'>
                     <RenderDirectoryItem campsite={campsite}/>
@@ -29,8 +31,25 @@ function Directory(props){
             );
         });
 
-        // return the Directory and selected campsite info.
-        // Also passing down toggleVis function
+        if (props.campsites.isLoading){
+            return(
+                <div className='container'>
+                    <div className='row'>
+                        <Loading/>
+                    </div>
+                </div>
+            );
+        }else if(props.campsites.errMess){
+               return(
+               <div className='container'>
+                    <div className='row'>
+                        <div className='col'>
+                            <h4>{props.campsites.errMess}</h4>
+                        </div>
+                    </div>
+                </div>
+               );
+        }
         return (
             <div className="container">
                   <div className="row">

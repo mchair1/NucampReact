@@ -3,6 +3,10 @@ import { Card, CardImg, CardText, CardBody, Breadcrumb, BreadcrumbItem, Button,M
 import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors} from 'react-redux-form';
 import CampsiteComments from './CampsiteCommentsComponent';
+import {Loading} from './LoadingComponent';
+import {baseUrl} from '../shared/baseUrl';
+import {FadeTransform, Fade, Stagger} from 'react-animation-components';
+import {useSpring, animated} from 'react-spring';
 
 
     //Look into getting comment button to toggle.
@@ -10,18 +14,21 @@ import CampsiteComments from './CampsiteCommentsComponent';
         // create the campsite info card, with a button to toggle if we want to show comments
         return(
             <div className='col-md-5 m-1'>
-                <Card>
-                    <CardImg top src={campsite.image} alt={campsite.name}/>
-                    <CardBody>
-                        <CardText>{campsite.description}</CardText>
-                    </CardBody>
-                </Card>
+                <FadeTransform in transformProps={{exitTransform: 'scale(0.5) translateY(50%)'}}>
+                    <Card>
+                        <CardImg top src={baseUrl+campsite.image} alt={campsite.name}/>
+                        <CardBody>
+                            <CardText>{campsite.description}</CardText>
+                        </CardBody>
+                    </Card>
+                </FadeTransform>    
             </div>
         );
     }
     
-    function RenderComments({comments, addComment, campsiteId}){
+    function RenderComments({comments, postComment, campsiteId}){
         console.log("Rendering Comments Section...")
+
         //If we have comments then
         if (comments){
                       
@@ -29,21 +36,25 @@ import CampsiteComments from './CampsiteCommentsComponent';
             //if (this.state.showComment){
 
             //If we want to show the comments for this particular campsite create the comments div
-            
                 return(
                     <div id='txtComments' className='col-md-5 m-1'>
+
                         <h4>Comments</h4>
-                        {comments.map(comment=> {
-                            return (
-                            <div key={comment.id}>
-                                <p>{comment.text}<br/>
-                                -- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}
-                                </p>
-                            </div>
-                            );  
-                        })
-                        }
-                        <CommentForm campsiteId={campsiteId} addComment={addComment} />
+                        <Stagger in>
+                            {comments.map(comment=> {
+                                return (
+                                    <Fade in key={comment.id}>
+                                        <div>
+                                            <p>{comment.text}<br/>
+                                            -- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}
+                                            </p>
+                                        </div>
+                                    </Fade>
+                                );  
+                            })
+                            }
+                        </Stagger>
+                        <CommentForm campsiteId={campsiteId} postComment={postComment} />
                     </div>
                     
                 );
@@ -51,8 +62,33 @@ import CampsiteComments from './CampsiteCommentsComponent';
     }
     function CampsiteInfo(props){
         console.log("Rendering Selected Campsite Info...");
-        console.log(props.campsite.id);
+        const styles = useSpring({
+            loop: { reverse: true },
+            from: { x: 0 },
+            to: { x: 100 },
+          })
+        if (props.isLoading){
+            console.log("isLoading...");
+            return (
+                <div className='container'>
+                    <div className='row'>
+                        <Loading/>
+                    </div>
+                </div>
+            );
+        }else if(props.errMess){
+            return(
+            <div className='container'>
+                <div className='row'>
+                    <div className='col'>
+                        <h4>{props.errMess}</h4>
+                    </div>
+                </div>
+            </div>
+            );
+        }
         if (props.campsite){
+
             return(
                 <div className='container'>
                     <div className="row">
@@ -67,7 +103,7 @@ import CampsiteComments from './CampsiteCommentsComponent';
                     </div>
                     <div className='row'>
                         <RenderCampsite campsite={props.campsite}/>
-                        <RenderComments comments={props.comments} addComment={props.addComment} campsiteId={props.campsite.id}/>
+                        <RenderComments comments={props.comments} postComment={props.postComment} campsiteId={props.campsite.id}/>
                     </div>
                 </div>
             );    
@@ -101,7 +137,7 @@ import CampsiteComments from './CampsiteCommentsComponent';
         }
         handleSubmit(values){
             this.toggleComment();
-            this.props.addComment(this.props.campsiteId, values.rating, values.author, values.text);
+            this.props.postComment(this.props.campsiteId, values.rating, values.author, values.text);
             console.log(this.props.campsite.id, values.rating, values.author, values.text);
         }
         render(){
