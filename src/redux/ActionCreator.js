@@ -197,4 +197,43 @@ export const addPartners = partners =>({
     type: ActionTypes.ADD_PARTNERS,
     payload: partners
 });
+/*
+export const postComment = (campsiteId, rating, author, text) => dispatch => {
+    const newComment= {
+        campsiteId: campsiteId,
+        rating: rating,
+        author: author,
+        text: text
+    }
+*/
+export const postFeedback = (feedback) => dispatch => {
+    console.log("In Post Feedback")
+    
+    return fetch(baseUrl + 'feedback', {
+        method: "POST",
+        body: JSON.stringify(feedback),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => {
+        if (response.ok){
+            return response;
+        }else{
+            const error = new Error(`error${response.status}: ${response.statusText}`);
+            error.response = response;
+            throw error;
+        }
+    },
+        error => { throw error;}
+    )
+    .then(response => response.json())
+    .then(response=> {
+        alert(`Thank you for your feedback!\n${JSON.stringify(response)}`);
+    })
+    .catch(error => {
+        console.log('post feedback', error.message);
+        alert('Your feed could not be submitted.\nError: ' + error.message);
+    })
+};
 
