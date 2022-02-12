@@ -8,7 +8,7 @@ import Home from './HomeComponent';
 import About from './AboutComponent'
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { postComment, fetchCampsites, fetchComments, fetchPromotions } from '../redux/ActionCreator';
+import { postComment, fetchCampsites, fetchComments, fetchPromotions, fetchPartners } from '../redux/ActionCreator';
 import { actions } from 'react-redux-form';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
@@ -20,7 +20,7 @@ const mapStateToProps = state => {
         campsites: state.campsites,
         comments: state.comments,
         partners: state.partners,
-        promotions:state.promotions
+        promotions: state.promotions
     };
 };
 
@@ -29,7 +29,8 @@ const mapDispatchToProps = {
     fetchCampsites: () => (fetchCampsites()),
     resetFeedbackForm: () => (actions.reset('feedbackForm')),
     fetchComments: () => (fetchComments()),
-    fetchPromotions: () => (fetchPromotions())
+    fetchPromotions: () => (fetchPromotions()),
+    fetchPartners: () => (fetchPartners())
 };
 
 class Main extends Component {
@@ -38,16 +39,21 @@ class Main extends Component {
         this.props.fetchCampsites();
         this.props.fetchComments();
         this.props.fetchPromotions();
+        console.log('...Fetch Partners');
+        this.props.fetchPartners();
     }
 
     render() {
         const HomePage = () => {
+            
             return(
                 <Home
                     campsite={this.props.campsites.campsites.filter(campsite => campsite.featured)[0]}
                     campsitesLoading={this.props.campsites.isLoading}
                     campsitesErrMess={this.props.campsites.errMess}
-                    partner={this.props.partners.filter(partner=> partner.featured)[0]}
+                    partner={this.props.partners.partners.filter(partner=> partner.featured)[0]}
+                    partnerIsLoading = {this.props.partners.isLoading}
+                    partnerErrMess = {this.props.partners.ErrMess}
                     promotion={this.props.promotions.promotions.filter(promotion => promotion.featured)[0]}
                     promotionLoading={this.props.promotions.isLoading}
                     promotionErrMess={this.props.promotions.errMess}
